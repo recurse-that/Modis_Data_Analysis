@@ -2,3 +2,4 @@ Mathworks mapping toolbox required
 
 Add-on read_kml required for executive
 
+NOTE: data must be contained in the working directory in respective subdirectories as follows: ancillary_mat, ancillary_tif, mxvi_mat, and mxvi_tif
