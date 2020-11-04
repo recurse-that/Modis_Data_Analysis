@@ -16,7 +16,7 @@ classdef Scene < handle
   end
     
   methods
-    function m_scene = Scene(name,focal_pxid, h, w, c, years)
+    function m_scene = Scene(name,focal_pxid, h, w, years)
         %m_scene Scene class constructor
         %   Initializes all class member variables
         m_scene.name = name;
@@ -45,7 +45,7 @@ classdef Scene < handle
 
       start_pxid = m_scene.focal_pxid - s_w - (s_h * c);
       cur_pxid = start_pxid;
-
+      
       for i = 1:h
         for j = 1:w
           m_scene.pxid_mat(i,j) = cur_pxid;
