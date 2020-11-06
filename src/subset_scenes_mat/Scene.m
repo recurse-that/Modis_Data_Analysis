@@ -7,7 +7,6 @@ classdef Scene < handle
       focal_pxid
       height
       width
-      buffer = 24
 
       year_count
       pxid_mat
@@ -24,12 +23,10 @@ classdef Scene < handle
         m_scene.height = h;
         m_scene.width = w;
         m_scene.year_count = years;
+       % m_scene.r = 24;
 
         m_scene.pxid_mat = ones(h,w);
-        m_scene.mxvi_mat = cell(years, 1);
-        for i = 1:years
-          m_scene.mxvi_mat{i} = ones(h,w);
-        end
+        m_scene.mxvi_mat = ones(years, h, w);
         m_scene.corr_mat = ones(h - 24*2, w - 24*2);
 
     end
@@ -62,15 +59,29 @@ classdef Scene < handle
       for i = 1:m_scene.height
         for j = 1:m_scene.width
           if water_mask( m_scene.pxid_mat(i, j) ) == 1
-            m_scene.mxvi_mat{year}(i, j) = nan;
+            m_scene.mxvi_mat(year, i, j) = nan;
           else
-            m_scene.mxvi_mat{year}(i, j) = mxvi_vector(m_scene.pxid_mat(i, j));
+            div = double(mxvi_vector(m_scene.pxid_mat(i, j))) / 10000;
+            m_scene.mxvi_mat(year, i, j) = div;
           end
         end
       end
-      m_scene.mxvi_mat{year} = double(m_scene.mxvi_mat{year}); 
-      m_scene.mxvi_mat{year} = m_scene.mxvi_mat{year} / 10000;
     end
+    
+    function set_MXVI_fig(m_scene, year, rsub, csub, index)
+      ss = size(m_scene.mxvi_mat, 2:3);
+      mat_out = ones( ss(1)-rsub, ss(2)-csub);
+      mat_in = ones(ss(1), ss(2));
+      
+      mat_in(1:end, 1:end) = m_scene.mxvi_mat(year, :, :);
+      
+      mat_out(1:end, 1:end) = mat_in(rsub*0.5+1 : end - rsub*0.5, csub*0.5+1 : end-csub*0.5);
+      
+      figure(index)
+      imshow(mat_out, 'Colormap', parula(256));
+    end
+    
+    function 
   end
 end
 
